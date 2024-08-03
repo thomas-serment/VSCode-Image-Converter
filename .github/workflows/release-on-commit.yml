@@ -1,0 +1,92 @@
+# .github/workflows/release-on-commit.yml
+# Allow Read / Write Settings > Actions
+# Commit with v.x.x.x
+
+name: Release VSIX on Commit Message
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-release:
+    if: contains(github.event.head_commit.message, 'v')
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Extract version from commit message
+      id: extract_version
+      run: echo "VERSION=$(echo '${{ github.event.head_commit.message }}' | grep -o 'v[0-9]*\.[0-9]*\.[0-9]*')" >> $GITHUB_OUTPUT
+
+    - name: Update package.json version
+      run: |
+        VERSION_WITHOUT_V=$(echo ${{ steps.extract_version.outputs.VERSION }} | sed 's/^v//')
+        npm version $VERSION_WITHOUT_V --no-git-tag-version
+
+    - name: Create temporary .vscodeignore
+      run: |
+        echo ".github/**" > .vscodeignore
+        echo ".vscode/**" >> .vscodeignore
+        echo ".gitignore" >> .vscodeignore
+
+    - name: Package the extension
+      run: |
+        npm install -g @vscode/vsce
+        vsce package
+
+    - name: Remove temporary .vscodeignore
+      run: rm .vscodeignore
+
+    - name: Rename VSIX file
+      id: rename_vsix
+      run: |
+        OLD_VSIX=$(ls *.vsix)
+        NEW_VSIX="code-radio-${{ steps.extract_version.outputs.VERSION }}.vsix"
+        mv "$OLD_VSIX" "$NEW_VSIX"
+        echo "VSIX_FILE=$NEW_VSIX" >> $GITHUB_OUTPUT
+
+    - name: Check if tag exists
+      id: check_tag
+      run: |
+        TAG_EXISTS=$(git tag -l "${{ steps.extract_version.outputs.VERSION }}")
+        if [ -n "$TAG_EXISTS" ]; then
+          echo "Tag already exists."
+          echo "tag_exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "tag_exists=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Create Release
+      id: create_release
+      if: steps.check_tag.outputs.tag_exists == 'false'
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.extract_version.outputs.VERSION }}
+        release_name: Release ${{ steps.extract_version.outputs.VERSION }}
+        draft: false
+        prerelease: false
+
+    - name: Upload VSIX to Release
+      uses: actions/upload-release-asset@v1
+      if: steps.check_tag.outputs.tag_exists == 'false'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./${{ steps.rename_vsix.outputs.VSIX_FILE }}
+        asset_name: ${{ steps.rename_vsix.outputs.VSIX_FILE }}
+        asset_content_type: application/octet-stream
