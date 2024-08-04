@@ -7,7 +7,7 @@ name: Release VSIX on Commit Message
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build-and-release:
