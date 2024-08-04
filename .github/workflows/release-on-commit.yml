@@ -7,7 +7,7 @@ name: Release VSIX on Commit Message
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build-and-release:
@@ -49,11 +49,15 @@ jobs:
     - name: Remove temporary .vscodeignore
       run: rm .vscodeignore
 
+    - name: Get repository name
+      id: get_repo
+      run: echo "REPO_NAME=$(basename $GITHUB_REPOSITORY)" >> $GITHUB_ENV
+
     - name: Rename VSIX file
       id: rename_vsix
       run: |
         OLD_VSIX=$(ls *.vsix)
-        NEW_VSIX="code-radio-${{ steps.extract_version.outputs.VERSION }}.vsix"
+        NEW_VSIX="${{ env.REPO_NAME }}-${{ steps.extract_version.outputs.VERSION }}.vsix"
         mv "$OLD_VSIX" "$NEW_VSIX"
         echo "VSIX_FILE=$NEW_VSIX" >> $GITHUB_OUTPUT
 
