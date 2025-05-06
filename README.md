@@ -1,5 +1,7 @@
 # VS Code Image Converter 🍦
 
+Utiliser VSCE Package car SHARP doit être compilé sur ordi
+
 **Convertisseur d'images pour VS Code** est une extension pour Visual Studio Code qui vous permet de convertir rapidement des images dans différents formats directement depuis l'éditeur de code.
 
 ## Fonctionnalités
