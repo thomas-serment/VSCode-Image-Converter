@@ -11,7 +11,9 @@ function activate(context) {
 				{ label: "JPEG", value: "jpeg" },
 				{ label: "PNG", value: "png" },
 				{ label: "WebP", value: "webp" },
-				// Ajoutez d'autres formats supportés par Sharp ici
+				{ label: "TIFF", value: "tiff" },
+				{ label: "AVIF", value: "avif" },
+				{ label: "HEIF", value: "heif" }
 			];
 
 			const formatChoice = await vscode.window.showQuickPick(formats, {
@@ -99,53 +101,39 @@ async function convertImage(filePath, format) {
 	const imageExtension = path.extname(filePath).toLowerCase();
 	if (
 		![
-			".png",
-			".jpg",
-			".jpeg",
-			".webp",
-			".tiff",
-			".heic",
-			".PNG",
-			".JPG",
-			".JPEG",
-			".WEBP",
-			".TIFF",
-			".HEIC",
+			".png", ".jpg", ".jpeg", ".webp", ".tiff", ".heic",
+			".PNG", ".JPG", ".JPEG", ".WEBP", ".TIFF", ".HEIC"
 		].includes(imageExtension)
 	) {
 		vscode.window.showErrorMessage(
-			`Le fichier ${path.basename(
-				filePath
-			)} n'est pas pris en charge. Seuls les fichiers PNG, JPG et JPEG sont supportés.`
+			`Le fichier ${path.basename(filePath)} n'est pas pris en charge.`
 		);
 		return;
 	}
 
 	const imageBuffer = await fs.promises.readFile(filePath);
-	const outputFormat = format === "jpeg" ? "jpg" : format; // Sharp utilise 'jpg' au lieu de 'jpeg'
+	const outputFormat = format === "jpeg" ? "jpg" : format;
 
 	const convertedImageBuffer = await sharp(imageBuffer)
 		.toFormat(outputFormat)
 		.toBuffer();
 
-	const convertedFileName = path
-		.basename(filePath)
-		.replace(
-			/\.(png|jpg|jpeg|webp|tiff|heic|PNG|JPG|JPEG|WEBP|TIFF|HEIC)$/,
-			`.${outputFormat}`
-		);
-	const outputPath = path.join(path.dirname(filePath), convertedFileName);
+	const convertedFileName = path.basename(filePath).replace(
+		/\.(png|jpg|jpeg|webp|tiff|heic)$/i,
+		`.${outputFormat}`
+	);
 
+	const outputDir = path.join(path.dirname(filePath), "converted");
+	await fs.promises.mkdir(outputDir, { recursive: true });
+
+	const outputPath = path.join(outputDir, convertedFileName);
 	await fs.promises.writeFile(outputPath, convertedImageBuffer);
 
 	vscode.window.showInformationMessage(
-		`L'image ${path.basename(
-			filePath
-		)} a été convertie en format ${format.toUpperCase()} et enregistrée sous ${path.basename(
-			outputPath
-		)}`
+		`L'image ${path.basename(filePath)} a été convertie et enregistrée dans 'converted'.`
 	);
 }
+
 
 function deactivate() {
 	// Clean up resources here if necessary
