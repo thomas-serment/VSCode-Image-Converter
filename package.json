@@ -1,47 +1,106 @@
 {
-    "name": "vscode-image-converter",
-    "displayName": "VS Code Image Converter",
-    "description": "Extension to convert images in Visual Studio Code",
-    "version": "0.0.1",
-    "engines": {
-        "vscode": "^1.61.0"
+  "name": "image-converter",
+  "displayName": "VSCode Image Converter",
+  "description": "Convert images to JPG, PNG or WebP from the Explorer. Reads HEIC, AVIF, BMP, TIFF, GIF, ICO and SVG.",
+  "version": "1.1.1",
+  "author": "thomas-serment",
+  "publisher": "thomas-serment",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thomas-serment/VSCode-Image-Converter"
+  },
+  "bugs": {
+    "url": "https://github.com/thomas-serment/VSCode-Image-Converter/issues"
+  },
+  "homepage": "https://github.com/thomas-serment/VSCode-Image-Converter#readme",
+  "icon": "images/icon.png",
+  "keywords": [
+    "image",
+    "convert",
+    "heic",
+    "webp",
+    "png",
+    "jpg"
+  ],
+  "engines": {
+    "vscode": "^1.120.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
     },
-    "categories": [
-        "Other"
-    ],
-    "activationEvents": [
-        "onCommand:extension.bulkConvertImages"
-    ],
-    "main": "extension.js",
-    "contributes": {
-        "commands": [
-            {
-                "command": "extension.bulkConvertImages",
-                "title": "Bulk Convert Images"
-            }
-        ],
-        "menus": {
-            "explorer/context": [
-                {
-                    "command": "extension.bulkConvertImages",
-                    "group": "navigation"
-                }
-            ]
-        }
-    },
-    
-    "publisher": "ThomasTSWD",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/ThomasTSWD/code-convert.git"
-    },
-    "icon": "icon.png",
-    "devDependencies": {
-        "@types/vscode": "^1.61.0"
-    },
-  
-    "dependencies": {
-        "sharp": "^0.33.2",
-        "fs": "^0.0.1-security"
+    "virtualWorkspaces": {
+      "supported": false,
+      "description": "Image Converter reads and writes files on the local disk."
     }
+  },
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "image-converter.convert",
+        "title": "Convert Images...",
+        "category": "Image Converter"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "image-converter.convert",
+          "when": "explorerResourceIsFolder || resourceExtname =~ /^\\.(jpe?g|jpe|png|apng|webp|avif|heic|heif|bmp|tiff?|gif|ico|svg)$/i",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Image Converter",
+      "properties": {
+        "imageConverter.quality": {
+          "type": "integer",
+          "default": 90,
+          "minimum": 1,
+          "maximum": 100,
+          "markdownDescription": "Quality used for JPG and WebP outputs (1 to 100). PNG is always lossless."
+        },
+        "imageConverter.outputFolder": {
+          "type": "string",
+          "default": "converted",
+          "markdownDescription": "Name of the folder, created next to each source image, that receives the converted files."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "tsc -p ./ --noEmit && node esbuild.mjs --production",
+    "compile": "node esbuild.mjs && tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src",
+    "test": "npm run compile && node --test \"out/**/*.test.js\"",
+    "package": "vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@jsquash/avif": "^2.1.1",
+    "@jsquash/jpeg": "^1.6.0",
+    "@jsquash/png": "^3.1.1",
+    "@jsquash/webp": "^1.5.0",
+    "@resvg/resvg-wasm": "^2.6.2",
+    "@types/node": "22.x",
+    "@types/vscode": "^1.120.0",
+    "@vscode/vsce": "^4.0.0",
+    "bmp-js": "^0.1.0",
+    "decode-ico": "^0.4.1",
+    "esbuild": "^0.25.0",
+    "eslint": "^9.39.3",
+    "libheif-js": "^1.23.5",
+    "omggif": "^1.0.10",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1",
+    "utif2": "^4.1.0"
+  }
 }
