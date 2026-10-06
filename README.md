@@ -39,7 +39,7 @@ Right-click images or a folder in the Explorer and choose **Convert Images...**,
 
 ## Requirements
 
-VS Code 1.120 or later. Virtual workspaces are not supported. Nothing is downloaded or uploaded: every codec ships inside the extension.
+VS Code 1.140 or later. Virtual workspaces are not supported. Nothing is downloaded or uploaded: every codec ships inside the extension.
 
 ## Third-party software
 
