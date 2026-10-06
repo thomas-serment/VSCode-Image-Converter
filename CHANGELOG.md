@@ -3,6 +3,38 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.0.0] - 2026-10-06
+
+### Added
+
+- Read HEIC, AVIF, BMP, TIFF, GIF, ICO and SVG files, on top of JPG, PNG and WebP
+- Folders are converted recursively, skipping the output, hidden and `node_modules` folders
+- Progress notification with a cancel button and a single summary at the end, with details in the Image Converter output channel
+- `imageConverter.quality` and `imageConverter.outputFolder` settings
+- The last output format is remembered and offered first
+- Third-party licenses are listed in `THIRD-PARTY-NOTICES.txt`
+- Photos are turned upright using their EXIF orientation, and transparency becomes white in JPG
+- Automated tests, including every input format through the bundled worker
+
+### Changed
+
+- Rewritten in TypeScript on WebAssembly codecs instead of sharp: one VSIX works on Linux, Windows and macOS, with no native build
+- Output formats are now JPG, PNG and WebP only
+- Conversions run in background workers, so the editor stays responsive
+- Messages and the command are now in English, and the command id is `image-converter.convert`
+
+### Removed
+
+- TIFF, AVIF and HEIF output formats
+- The sharp and `fs` dependencies
+
+### Fixed
+
+- Existing files are never overwritten: a numeric suffix is added instead
+- One notification per image is replaced by a single summary
+- Large folders no longer start every conversion at once
+- Dependency vulnerabilities reported by `npm audit`
+
 ## [1.1.1] - 2025-05-06
 
 ### Added
