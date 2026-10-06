@@ -24,7 +24,7 @@
     "jpg"
   ],
   "engines": {
-    "vscode": "^1.120.0"
+    "vscode": "^1.140.0"
   },
   "categories": [
     "Other"
@@ -80,7 +80,6 @@
     "build": "tsc -p ./ --noEmit && node esbuild.mjs --production",
     "compile": "node esbuild.mjs && tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "lint": "eslint src",
     "test": "npm run compile && node --test \"out/**/*.test.js\"",
     "package": "vsce package --no-dependencies"
   },
@@ -90,17 +89,15 @@
     "@jsquash/png": "^3.1.1",
     "@jsquash/webp": "^1.5.0",
     "@resvg/resvg-wasm": "^2.6.2",
-    "@types/node": "22.x",
-    "@types/vscode": "^1.120.0",
+    "@types/node": "^24.19.1",
+    "@types/vscode": "^1.140.0",
     "@vscode/vsce": "^4.0.0",
     "bmp-js": "^0.1.0",
     "decode-ico": "^0.4.1",
-    "esbuild": "^0.25.0",
-    "eslint": "^9.39.3",
+    "esbuild": "^0.28.2",
     "libheif-js": "^1.23.5",
     "omggif": "^1.0.10",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.1",
+    "typescript": "^7.0.2",
     "utif2": "^4.1.0"
   }
 }

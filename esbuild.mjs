@@ -44,7 +44,7 @@ await build({
 	bundle: true,
 	platform: 'node',
 	format: 'cjs',
-	target: 'node22',
+	target: 'node24',
 	external: ['vscode'],
 	minify: production,
 	sourcemap: !production,

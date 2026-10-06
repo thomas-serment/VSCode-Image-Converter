@@ -7,7 +7,6 @@ node_modules/**
 RELEASE_NOTES.md
 *.vsix
 **/tsconfig.json
-**/eslint.config.mjs
 esbuild.mjs
 **/*.map
 **/*.ts
