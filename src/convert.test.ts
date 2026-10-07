@@ -74,6 +74,33 @@ test('JPEG photos are turned upright using their EXIF orientation', async () => 
 	assert.ok(rgbAt(result, 8, W - 5)[2] > 190, 'bottom of the rotated image is the blue half');
 });
 
+test('JPG output keeps fine detail at the default quality', async () => {
+	// Noise, a gradient and thin diagonal lines: the kind of detail a soft encoder smears.
+	const width = 256;
+	const data = new Uint8ClampedArray(width * width * 4);
+	let seed = 12345;
+	const noise = (): number => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff) * 40;
+	for (let y = 0; y < width; y++) {
+		for (let x = 0; x < width; x++) {
+			const i = (y * width + x) * 4;
+			const line = (x + y) % 9 === 0 ? 90 : 0;
+			const n = noise();
+			data.set([Math.min(255, x + n + line), Math.min(255, y + n - line / 2), Math.min(255, 128 + 60 * Math.sin(x / 7) + n), 255], i);
+		}
+	}
+	const original = new Pixels(data, width, width);
+	const back = await decode('jpeg', await encode('jpg', original, 92));
+	let squares = 0;
+	for (let i = 0; i < data.length; i += 4) {
+		for (let c = 0; c < 3; c++) {
+			squares += (data[i + c] - back.data[i + c]) ** 2;
+		}
+	}
+	const psnr = 10 * Math.log10(255 ** 2 / (squares / (width * width * 3)));
+	// The softer default quantization table of mozjpeg gives about 31 dB here, the standard one 33.6 dB.
+	assert.ok(psnr > 33, `fidelity should stay above 33 dB, got ${psnr.toFixed(1)}`);
+});
+
 test('transparent images get a white background when saved as JPG', async () => {
 	const transparent = new Pixels(new Uint8ClampedArray(W * H * 4), W, H);
 	const png = await encode('png', transparent, 90);
