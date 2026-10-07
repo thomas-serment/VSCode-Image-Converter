@@ -26,7 +26,7 @@ Right-click images or a folder in the Explorer and choose **Convert Images...**,
 
 | Setting | Default | Description |
 | --- | --- | --- |
-| `imageConverter.quality` | `90` | Quality of JPG and WebP outputs, from 1 to 100 (PNG is lossless) |
+| `imageConverter.quality` | `92` | Quality of JPG and WebP outputs, from 1 to 100 (PNG is lossless) |
 | `imageConverter.outputFolder` | `converted` | Name of the folder that receives the converted files |
 
 ## Good to know
