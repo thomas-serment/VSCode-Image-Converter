@@ -217,7 +217,8 @@ export async function encode(format: OutputFormat, image: Pixels, quality: numbe
 	switch (format) {
 		case 'jpg': {
 			const encodeJpeg = await jpegEncode();
-			return new Uint8Array(await encodeJpeg(flattenOnWhite(image) as unknown as CodecImage, { quality }));
+			// mozjpeg's default quantization table gives smaller but visibly softer files than the standard one.
+			return new Uint8Array(await encodeJpeg(flattenOnWhite(image) as unknown as CodecImage, { quality, quant_table: 0 }));
 		}
 		case 'png': {
 			const encodePng = await pngEncode();

@@ -35,9 +35,9 @@ async function pickInputs(uri?: vscode.Uri, uris?: vscode.Uri[]): Promise<string
 	return local?.length ? local.map((item) => item.fsPath) : undefined;
 }
 
-/** Reads the quality setting, falling back to 90 when it is not a usable number. */
+/** Reads the quality setting, falling back to 92 when it is not a usable number. */
 function qualitySetting(value: unknown): number {
-	return typeof value === 'number' && Number.isFinite(value) ? Math.round(Math.min(100, Math.max(1, value))) : 90;
+	return typeof value === 'number' && Number.isFinite(value) ? Math.round(Math.min(100, Math.max(1, value))) : 92;
 }
 
 const plural = (count: number, word: string): string => `${count} ${word}${count === 1 ? '' : 's'}`;
