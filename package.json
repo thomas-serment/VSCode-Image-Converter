@@ -62,7 +62,7 @@
       "properties": {
         "imageConverter.quality": {
           "type": "integer",
-          "default": 90,
+          "default": 92,
           "minimum": 1,
           "maximum": 100,
           "markdownDescription": "Quality used for JPG and WebP outputs (1 to 100). PNG is always lossless."
