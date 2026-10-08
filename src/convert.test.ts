@@ -89,7 +89,7 @@ test('JPG output keeps fine detail at the default quality', async () => {
 		}
 	}
 	const original = new Pixels(data, width, width);
-	const back = await decode('jpeg', await encode('jpg', original, 92));
+	const back = await decode('jpeg', await encode('jpg', original, 95));
 	let squares = 0;
 	for (let i = 0; i < data.length; i += 4) {
 		for (let c = 0; c < 3; c++) {
@@ -97,8 +97,8 @@ test('JPG output keeps fine detail at the default quality', async () => {
 		}
 	}
 	const psnr = 10 * Math.log10(255 ** 2 / (squares / (width * width * 3)));
-	// The softer default quantization table of mozjpeg gives about 31 dB here, the standard one 33.6 dB.
-	assert.ok(psnr > 33, `fidelity should stay above 33 dB, got ${psnr.toFixed(1)}`);
+	// The softer default quantization table of mozjpeg gives about 34 dB here, the standard one 37.4 dB.
+	assert.ok(psnr > 36, `fidelity should stay above 36 dB, got ${psnr.toFixed(1)}`);
 });
 
 test('transparent images get a white background when saved as JPG', async () => {
