@@ -2,7 +2,7 @@
   "name": "image-converter",
   "displayName": "VSCode Image Converter",
   "description": "Convert images to JPG, PNG or WebP from the Explorer. Reads HEIC, AVIF, BMP, TIFF, GIF, ICO and SVG.",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "author": "thomas-serment",
   "publisher": "thomas-serment",
   "license": "MIT",
