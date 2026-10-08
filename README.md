@@ -9,7 +9,7 @@ Convert images to JPG, PNG or WebP from the Explorer, in one click.
 
 - Right-click one or many images, or a whole folder (subfolders included), and pick the output format
 - Reads HEIC (iPhone photos), AVIF, BMP, TIFF, GIF, ICO and SVG on top of JPG, PNG and WebP
-- Writes JPG, PNG or WebP, with an adjustable quality
+- Writes JPG, PNG or WebP, with a quality you set once in the settings
 - Photos are turned upright using their EXIF orientation, and transparency becomes white in JPG
 - Never overwrites a file: existing names get a ` (1)`, ` (2)`... suffix
 - Remembers the last output format you picked
@@ -24,9 +24,17 @@ Convert images to JPG, PNG or WebP from the Explorer, in one click.
 
 Right-click images or a folder in the Explorer and choose **Convert Images...**, or run **Image Converter: Convert Images...** from the Command Palette to browse for files. Converted files are saved in a `converted` folder next to each source image.
 
+**Asked each time**
+
+| Step | Choices |
+| --- | --- |
+| Output format | WebP, JPG or PNG (the last format used comes first) |
+
+**Settings** (`Ctrl+,`, then search for "Image Converter"): they are not asked again, change them once.
+
 | Setting | Default | Description |
 | --- | --- | --- |
-| `imageConverter.quality` | `92` | Quality of JPG and WebP outputs, from 1 to 100 (PNG is lossless) |
+| `imageConverter.quality` | `95` | Quality of JPG and WebP outputs, from 1 to 100 (PNG is lossless) |
 | `imageConverter.outputFolder` | `converted` | Name of the folder that receives the converted files |
 
 ## Good to know
